@@ -1,0 +1,32 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(
+    MaterialApp(
+      home: HelloWorld(),
+    )
+  );
+}
+class HelloWorld  extends StatelessWidget {
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+    body: Center(
+      child: Container(
+      height: 300,
+      width: 200,
+  decoration: BoxDecoration(
+    image: DecorationImage(
+      image: AssetImage('Images/apple.jpg'),
+      fit: BoxFit.cover
+    ),
+
+
+  ),
+      ),
+    ),
+    );
+  }
+}
+
