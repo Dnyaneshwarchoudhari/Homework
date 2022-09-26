@@ -1,0 +1,435 @@
+import 'dart:io';
+
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+
+import 'utils/colour.dart';
+import 'utils/space.dart';
+
+void main() {
+  runApp(
+      MaterialApp(
+        home: Registration(),
+      )
+  );
+}
+
+class Registration extends StatefulWidget {
+  Registration({Key? key}) : super(key: key);
+
+  @override
+  State<Registration> createState() => _RegistrationState();
+}
+
+class _RegistrationState extends State<Registration> {
+  bool password = false;
+
+  String? userNameError;
+  String? emailIdError;
+
+  /// Form with Validation
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+  TextEditingController emailController = TextEditingController();
+  TextEditingController dateInput = TextEditingController();
+
+  /// Radio
+  String male = 'Male';
+  String female = 'Female';
+  String other = 'Other';
+
+  String gender = 'Male';
+
+  /// CheckBox
+  bool cricket = false;
+  bool volleyball = false;
+  bool reading = false;
+  String datebtn = 'DateTime';
+
+
+  final _picker = ImagePicker();
+  File? file;
+
+  String get txtRegistration_Form => null!;
+
+  get txtEmailId => null;
+
+  get txtUserName => null;
+
+  getImage() async {
+    final photo = await _picker.pickImage(source: ImageSource.camera);
+
+    file = File(photo!.path);
+
+    setState(() {
+
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var txtPassword;
+    return Scaffold(
+      body: Container(
+        height: double.infinity,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Colors.blue,
+              Colors.blue,
+            ],
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+          ),
+        ),
+        child: Form(
+          key: formKey,
+          child: Padding(
+            padding: const EdgeInsets.all(18.0),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+
+                  GestureDetector(
+                    onTap: () {
+                      getImage();
+                    },
+                    child: CircleAvatar(
+                      radius: 50,
+                      backgroundColor: Colors.white,
+                      backgroundImage: file == null
+                          ? const AssetImage(
+                          'Images/apple.jpg')
+                          : FileImage(file!) as ImageProvider,
+                    ),
+                  ),
+                  Text(
+                    txtRegistration_Form,
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+
+                  TextFormField(
+                    validator: (value) {
+                      return (value!.isEmpty) ? 'Please Enter User Name' : null;
+                    },
+
+
+                    // onChanged: (value) {
+                    //   if (value.isEmpty) {
+                    //     error = 'Please Enter User Name';
+                    //     setState(() {});
+                    //   } else {
+                    //     error = null;
+                    //     setState(() {});
+                    //   }
+                    // },
+                    cursorColor: Colors.white,
+                    style: TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                        hintText: txtUserName,
+                        labelText: txtUserName,
+                        // errorText: userNameError,
+                        labelStyle: TextStyle(color: Colors.white),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                        filled: true,
+                        fillColor: Colors.blue,
+                        prefixIcon: Icon(
+                          Icons.person,
+                          color: Colors.white,
+                        )),
+                  ),
+                  // verticalSpace(20.0),
+                  TextFormField(
+                    controller: emailController,
+                    validator: (value) {
+                      bool emailValid = RegExp(
+                          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                          .hasMatch(emailController.text);
+
+                      return (value!.isEmpty)
+                          ? 'Please Enter Email'
+                          : (!emailValid)
+                          ? 'Please Enter Valid Email'
+                          : null;
+                    },
+
+
+                    cursorColor: Colors.white,
+                    style: TextStyle(color: Colors.white),
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: InputDecoration(
+                      // errorText: emailIdError,
+                      hintText: txtEmailId,
+                      labelText: txtEmailId,
+                      labelStyle: TextStyle(color: Colors.white),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                      filled: true,
+                      fillColor: Colors.blue,
+                      prefixIcon: Icon(
+                        Icons.email_outlined,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  // verticalSpace(20.0),
+                  TextFormField(
+                    cursorColor: Colors.white,
+                    style: TextStyle(color: Colors.white),
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: InputDecoration(
+                      hintText: txtPassword,
+                      labelText: txtPassword,
+                      labelStyle: TextStyle(color: Colors.white),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                      filled: true,
+                      fillColor: Colors.blue,
+                      prefixIcon: Icon(
+                        Icons.lock,
+                        color: Colors.white,
+                      ),
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            password = !password;
+                          });
+                        },
+                        icon: Icon(
+                          password ? Icons.visibility_off : Icons.visibility,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    obscureText: password,
+                  ),
+                  //verticalSpace(20.0),
+                  TextField(
+                    controller: dateInput,
+                    decoration: InputDecoration(
+                      hintText: 'Select date',
+                      labelText: 'Date',
+                      suffixIcon: IconButton(onPressed: () async {
+                        DateTime? date = await showDatePicker(context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2023),
+                        );
+                        setState(() {
+                          dateInput.text =
+                          '${date!.day} / ${date.month} / ${date.year}';
+                        });
+                      }, icon: Icon(Icons.calendar_month),),
+                    ),
+
+                  ),
+                  //verticalSpace(20.0),
+                  Row(
+                    children: [
+                      Text(
+                        'Gender',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20.0,
+                        ),
+                      ),
+                      Radio(
+                        activeColor: Colors.white,
+                        value: male,
+                        groupValue: gender,
+                        onChanged: (value) {
+                          setState(() {
+                            gender = value.toString();
+                          });
+                        },
+                      ),
+                      Text(
+                        male,
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      Radio(
+                        activeColor: Colors.white,
+                        value: female,
+                        groupValue: gender,
+                        onChanged: (value) {
+                          setState(() {
+                            gender = value.toString();
+                          });
+                        },
+                      ),
+                      Text(
+                        female,
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      Radio(
+                        activeColor: Colors.white,
+                        value: other,
+                        groupValue: gender,
+                        onChanged: (value) {
+                          setState(() {
+                            gender = value.toString();
+                          });
+                        },
+                      ),
+                      Text(
+                        other,
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                  // verticalSpace(20.0),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        const Text(
+                          'Hobby',
+                          style: TextStyle(
+                              color: Colors.white
+
+                          ),
+                        ),
+                        Checkbox(
+                          checkColor: Colors.blue,
+                          activeColor: Colors.white,
+                          value: cricket,
+                          onChanged: (value) {
+                            setState(() {
+                              cricket = value!;
+                            });
+                          },
+                        ),
+                        Text(
+                          'Cricket',
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                        Checkbox(
+                          checkColor: Colors.blue,
+                          activeColor: Colors.white,
+                          value: volleyball,
+                          onChanged: (value) {
+                            setState(() {
+                              volleyball = value!;
+                            });
+                          },
+                        ),
+                        Text(
+                          'Volleyball',
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                        Checkbox(
+                          checkColor: Colors.blue,
+                          activeColor: Colors.white,
+                          value: volleyball,
+                          onChanged: (value) {
+                            setState(() {
+                              volleyball = value!;
+                            });
+                          },
+                        ),
+                        Text(
+                          'Volleyball',
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                        Checkbox(
+                          checkColor: Colors.blue,
+                          activeColor: Colors.white,
+                          value: volleyball,
+                          onChanged: (value) {
+                            setState(() {
+                              volleyball = value!;
+                            });
+                          },
+                        ),
+                        Text(
+                          'Volleyball',
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                        Checkbox(
+                          checkColor: Colors.blue,
+                          activeColor: Colors.white,
+                          value: reading,
+                          onChanged: (value) {
+                            setState(() {
+                              reading = value!;
+                            });
+                          },
+                        ),
+                        Text(
+                          'Reading',
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  //verticalSpace(20.0),
+                  Center(
+                    child: MaterialButton(
+                      onPressed: () async {
+                        // formKey.currentState!.validate();
+                        var SharedPreferences;
+                        var pref = await SharedPreferences.getInstance();
+                        pref.setBool('Login', true);
+                        Navigator.pushNamed(context, 'WhatsUp');
+                      },
+                      color: Colors.yellow.shade800,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      child: Text(
+                        'Create Account',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
